@@ -3,6 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero'
 // import { HEROES } from '../mock-heroes'; //<-- don't need it becuase I imported HeroServices below.
 import { HeroService } from '../hero.service';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { of } from 'rxjs/observable/of';
+
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+
 
 
 @Component({
@@ -24,6 +30,8 @@ export class HeroesComponent implements OnInit {
 
   constructor(private heroService: HeroService) { } //<-- To inject the HeroService
 
+ 
+  
   ngOnInit() {
     this.getHeroes(); 
     

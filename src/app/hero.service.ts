@@ -28,6 +28,11 @@ export class HeroService {
 
     private heroesUrl = 'api/heroes';
 
+    /* 
+      *this handle HTTP operations that fails
+      *App continues       
+    */
+
     private handleError<T>(operation = 'operation', result?: T){
       return (error: any): Observable<T> =>{
         console.error(error);
@@ -37,7 +42,7 @@ export class HeroService {
     }
 
 
-  //
+  //this GET heroes from server
 
   getHeroes(): Observable<Hero[]> {
     return this.http.get<Hero[]>(this.heroesUrl)
@@ -91,6 +96,19 @@ export class HeroService {
       tap(_ => this.log(`found heroes matching "${term}"`)),
       catchError(this.handleError<Hero[]>('searchHeroes', []))
     );
+  }
+
+  getHeroNo404<Data>(id: number): Observable<Hero> {
+    const url = `${this.heroesUrl}/?id=${id}`;
+    return this.http.get<Hero[]>(url)
+      .pipe(
+        map(heroes => heroes[0]), // returns a {0|1} element array
+        tap(h => {
+          const outcome = h ? `fetched` : `did not find`;
+          this.log(`${outcome} hero id=${id}`);
+        }),
+        catchError(this.handleError<Hero>(`getHero id=${id}`))
+      );
   }
 
 }
